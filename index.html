@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kyron</title>
+<meta name="description" content="Kyron: plan it, make it. Free tools to build a plan, write a first draft, and weigh a decision. Runs in your browser.">
+<meta name="theme-color" content="#ff0090">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap">
+<style>
+:root{--paper:#fffafb;--ink:#1a0d13;--mute:#7d636c;--soft:#ffe6ec;--pink:#ff6b8b;--hot:#ff0090;--line:#1a0d13;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#150d11;--ink:#fbeef2;--mute:#b79ca6;--soft:#2c1822;--line:#fbeef2;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#150d11;--ink:#fbeef2;--mute:#b79ca6;--soft:#2c1822;--line:#fbeef2;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);background:var(--paper)}
+body{margin:0;height:100%;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);font:400 16px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.w{max-width:740px;margin:0 auto;padding:0 16px;width:100%}
+header .w{display:flex;align-items:center;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.04em}
+.mk{display:block;color:var(--ink)}
+.brand .mk{width:28px;height:30px}
+#scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;padding-bottom:24px}
+.hero{text-align:center;padding:3vh 0 20px}
+.hero .mk{width:84px;height:93px;margin:0 auto 8px}
+h1{font-size:clamp(40px,11vw,64px);line-height:1;margin:0 0 10px;font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--mute);max-width:32em;margin:0 auto}
+.f{display:block;margin:0 0 14px;font-weight:600;font-size:14px}
+.f input,.f select,.f textarea,#out{display:block;width:100%;margin-top:6px;border:2.5px solid var(--line);border-radius:14px;background:var(--paper);padding:10px 12px;font-weight:400;font-size:16px}
+.f textarea,#out{resize:vertical;min-height:120px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 16px}
+.btn{background:var(--pink);color:#1a0d13;border:2.5px solid var(--line);border-radius:999px;padding:8px 22px;font-weight:700;box-shadow:3px 3px 0 var(--hot)}
+.ghost{background:none;border:2px solid var(--line);border-radius:999px;padding:6px 16px;font-weight:600;font-size:14px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{background:none;border:2px solid var(--line);border-radius:999px;padding:3px 16px;font-weight:600;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--pink);color:#1a0d13}
+.chips{margin-bottom:16px}
+.md h3{font-size:1.4em;margin:.8em 0 .2em;line-height:1.2}
+.md h4{font-size:1.1em;margin:1.1em 0 .2em}
+.md h4 small{color:var(--mute);font-weight:500;font-size:.85em;margin-left:6px}
+.md ul{margin:.3em 0;padding:0;list-style:none}
+.md li{display:flex;gap:10px;margin:.35em 0;cursor:pointer}
+.md li i{flex:none;width:20px;height:20px;margin-top:3px;border:2px solid var(--line);border-radius:6px}
+.md li i.on{background:var(--hot);border-color:var(--hot);box-shadow:inset 0 0 0 3px var(--paper)}
+.md li:has(i.on) span{color:var(--mute);text-decoration:line-through}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#dec{background:var(--soft);border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:4px}
+#dec b{font-size:1.15em}
+.hint{color:var(--mute);font-size:14px;margin:0 0 14px}
+footer{padding:8px 0 12px}
+footer .seg{justify-content:center}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="w"><div class="brand"><span data-mark></span>KYRON</div></div></header>
+<main id="scroll"><div class="w">
+  <div class="hero">
+    <div data-mark></div>
+    <h1>Plan it. Make it.</h1>
+    <p class="sub">Pick a tool, fill in a line or two, and get a plan, a draft, or a decision. It all runs on your device. Nothing you type is sent anywhere.</p>
+  </div>
+
+  <section id="t-plan">
+    <label class="f">What do you want to get done?<input id="goal" placeholder="Launch my pottery shop" maxlength="120"></label>
+    <label class="f">How long do you have?<select id="wk"><option value="1">1 week</option><option value="2">2 weeks</option><option value="4" selected>4 weeks</option><option value="6">6 weeks</option><option value="8">8 weeks</option><option value="12">12 weeks</option></select></label>
+    <div class="row"><button class="btn" id="mkPlan" type="button">Make my plan</button></div>
+    <div id="planOut" class="md"></div>
+  </section>
+
+  <section id="t-create" hidden>
+    <div class="seg chips" id="kinds">
+      <button type="button" data-k="bio">Bio</button><button type="button" data-k="email">Cold email</button><button type="button" data-k="post">Announcement</button><button type="button" data-k="names">Names</button>
+    </div>
+    <label class="f">What you do or make<input id="what" placeholder="design posters for local bands" maxlength="120"></label>
+    <div class="two">
+      <label class="f">Your name<input id="nm" placeholder="Optional" maxlength="60"></label>
+      <label class="f">Who it’s for<input id="who" placeholder="Optional" maxlength="80"></label>
+    </div>
+    <div class="row"><button class="btn" id="mkText" type="button">Write it</button></div>
+    <div id="outBox" hidden>
+      <textarea id="out" rows="10" aria-label="Your draft"></textarea>
+      <div class="row" style="margin-top:10px"><button class="ghost" id="cpOut" type="button">Copy</button><button class="ghost" id="again" type="button">Another version</button></div>
+    </div>
+  </section>
+
+  <section id="t-decide" hidden>
+    <p class="hint">One point per line. Start a line with - for a downside. Use ++ or -- to count double.</p>
+    <div class="two">
+      <label class="f">Option A<input id="na" value="Option A" maxlength="40"><textarea id="la" rows="6" placeholder="Pays more&#10;++Great team&#10;-Long commute"></textarea></label>
+      <label class="f">Option B<input id="nb" value="Option B" maxlength="40"><textarea id="lb" rows="6" placeholder="Closer to home&#10;-Lower pay&#10;Room to grow"></textarea></label>
+    </div>
+    <div id="dec" aria-live="polite">Add a few lines to compare.</div>
+  </section>
+</div></main>
+<footer><div class="w"><div class="seg" id="tabs" role="group" aria-label="Tools">
+  <button type="button" data-t="plan">Plan</button><button type="button" data-t="create">Create</button><button type="button" data-t="decide">Decide</button>
+</div></div></footer>
+<script>
+const $=s=>document.querySelector(s);
+const PTS="160,1110 330,900 440,790 505,715 635,610 730,510 885,420 945,400 970,567 840,590 760,630 570,770 455,940 413,980 480,988 600,907 715,838 915,750 970,758 780,975 745,1105 700,1245 700,1295 530,1190 160,1125";
+const mark=()=>`<svg class="mk" viewBox="90 290 960 1060" aria-hidden="true"><path d="M845 410C850 380 880 345 920 322 945 340 955 370 960 400" fill="none" stroke="currentColor" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/><polygon points="${PTS}" fill="#ff6b8b" stroke="currentColor" stroke-width="56" stroke-linejoin="round"/><polygon points="${PTS}" fill="none" stroke="#ff0090" stroke-width="22" stroke-linejoin="round"/></svg>`;
+document.querySelectorAll("[data-mark]").forEach(e=>e.innerHTML=mark());
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const copy=(b,t)=>{const o=b.textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent="Copied"},()=>{b.textContent="Copy failed"});setTimeout(()=>{b.textContent=o},1500)};
+let tab="plan",kind="bio",v=0,plan=null;
+try{plan=JSON.parse(localStorage.getItem("kyron.plan")||"null");tab=localStorage.getItem("kyron.tab")||tab}catch(e){}
+const store=()=>{try{localStorage.setItem("kyron.plan",JSON.stringify(plan));localStorage.setItem("kyron.tab",tab)}catch(e){}};
+
+function show(){
+ ["plan","create","decide"].forEach(t=>$("#t-"+t).hidden=t!==tab);
+ document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t==tab));
+ document.querySelectorAll("#kinds button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k==kind));
+}
+
+/* PLAN */
+function makePlan(){
+ const g=$("#goal").value.trim();if(!g){$("#goal").focus();return}
+ const W=+$("#wk").value,T=W>=4?W:W*7,u=W>=4?"Week":"Day";
+ const P=[
+  ["Define",[`Write one sentence describing what “${g}” looks like when it’s done`,"List what you already have and what’s missing","Pick the one thing that matters most"]],
+  ["Build",["Break the work into pieces you can finish in an hour","Do the hardest piece first","Finish a rough version of everything"]],
+  ["Improve",["Show it to one person and write down their reactions","Fix the top three problems","Cut anything that doesn’t help"]],
+  ["Finish",["Do a final check","Share it or launch it","Write down what worked and what didn’t"]]
+ ];
+ plan={goal:g,ph:P.map((p,i)=>{const a=Math.floor(i*T/4)+1,b=Math.floor((i+1)*T/4);return{n:p[0],w:a==b?`${u} ${a}`:`${u}s ${a}–${b}`,s:p[1].map(t=>({t,d:0}))}})};
+ store();renderPlan();
+}
+function renderPlan(){
+ const o=$("#planOut");if(!plan){o.innerHTML="";return}
+ let all=0,done=0,h=`<h3>${esc(plan.goal)}</h3>`;
+ plan.ph.forEach((p,i)=>{h+=`<h4>${p.n}<small>${p.w}</small></h4><ul>`+p.s.map((s,j)=>{all++;done+=s.d;return`<li data-i="${i}" data-j="${j}"><i class="${s.d?"on":""}"></i><span>${esc(s.t)}</span></li>`}).join("")+"</ul>"});
+ h+=`<p><strong>${done} of ${all} done.</strong></p><div class="row"><button class="ghost" id="cpPlan" type="button">Copy plan</button><button class="ghost" id="clr" type="button">Start over</button></div>`;
+ o.innerHTML=h;
+}
+$("#planOut").addEventListener("click",e=>{
+ const li=e.target.closest("li");
+ if(li){const s=plan.ph[+li.dataset.i].s[+li.dataset.j];s.d=s.d?0:1;store();renderPlan();return}
+ if(e.target.id=="cpPlan")copy(e.target,plan.goal+"\n\n"+plan.ph.map(p=>p.n+" ("+p.w+")\n"+p.s.map(s=>(s.d?"[x] ":"[ ] ")+s.t).join("\n")).join("\n\n"));
+ if(e.target.id=="clr"){plan=null;store();renderPlan();$("#goal").value="";$("#goal").focus()}
+});
+$("#mkPlan").addEventListener("click",makePlan);
+$("#goal").addEventListener("keydown",e=>{if(e.key==="Enter")makePlan()});
+
+/* CREATE */
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function names(w){
+ const m=w.match(/[A-Za-z]{3,}/),K=m?m[0][0].toUpperCase()+m[0].slice(1).toLowerCase():"Nova";
+ const P=["Neo","Bright","Pixel","Nova","Loop","Spark","Moss","Tide","Fable","Orbit","Kite","Ember"],S=["ly","ful","hub","works","kin","ora","ify","able","ish","ia"];
+ const set=new Set();let n=0;
+ while(set.size<10&&n++<200){const r=Math.random();set.add(r<.4?pick(P)+K:r<.8?K.slice(0,Math.max(3,Math.ceil(K.length/2)))+pick(S):pick(P)+pick(S))}
+ return[...set].join("\n");
+}
+function write(){
+ const w=$("#what").value.trim()||"[what you do]",n=$("#nm").value.trim(),f=$("#who").value.trim(),me=n||"[Your name]",x=v%2;
+ if(kind=="names")return names($("#what").value);
+ if(kind=="bio")return x?`${n?n+" here. ":""}What I do: ${w}. How I do it: simple, fast, and with care.\n\nWorking with ${f||"people with big ideas"}? Say hi.`:`${n?`I’m ${n}. `:""}I ${w}. I like work that’s clear, useful and a little bold, and I finish what I start.\n\nIf you need someone for ${f||"your next project"}, let’s talk.`;
+ if(kind=="email")return x?`Subject: Can I help ${f||"your team"}?\n\nHi,\n\nI’m ${me}. I ${w}. I noticed ${f||"your team"} could use [one specific thing you noticed], so I put together [a one-line sample].\n\nI can send it over if you’d like. Just reply “yes.”\n\n${me}`:`Subject: Quick idea for ${f||"your team"}\n\nHi,\n\nI ${w}, and I think I can help ${f||"your team"}. Here’s one small thing I’d start with: [one specific idea for them].\n\nWould you be open to a 15-minute call this week? If not, no worries at all.\n\nThanks,\n${me}`;
+ return x?`I’m ${w}.\n\nWhy? Because ${f||"people like us"} deserve something that works better. So I’m building it in public, one small step at a time.\n\nFollow along. First update this week.`:`Big news: I ${w}.\n\nI’ve been working on this for a while, and it’s finally ready for ${f||"you"}.\n\nHere’s what to expect:\n- [Thing one]\n- [Thing two]\n- [Thing three]\n\nTell me what you think. I read every reply.`;
+}
+function out(){$("#out").value=write();$("#outBox").hidden=false}
+$("#mkText").addEventListener("click",()=>{v=0;out()});
+$("#again").addEventListener("click",()=>{v++;out()});
+$("#cpOut").addEventListener("click",e=>copy(e.target,$("#out").value));
+$("#kinds").addEventListener("click",e=>{const b=e.target.closest("button");if(b){kind=b.dataset.k;v=0;show();if(!$("#outBox").hidden)out()}});
+
+/* DECIDE */
+function score(t){return t.split("\n").map(l=>l.trim()).filter(Boolean).reduce((s,l)=>{const m=l.match(/^(\+\+|--|\+|-)?/)[1];return s+({"++":2,"+":1,"--":-2,"-":-1}[m]??1)},0)}
+function decide(){
+ const a=score($("#la").value),b=score($("#lb").value),na=esc($("#na").value||"Option A"),nb=esc($("#nb").value||"Option B");
+ if(!$("#la").value.trim()&&!$("#lb").value.trim()){$("#dec").textContent="Add a few lines to compare.";return}
+ const d=a-b;
+ $("#dec").innerHTML=`<b>${d==0?"It’s a tie":(d>0?na:nb)+" leads by "+Math.abs(d)}</b><br>${na}: ${a>0?"+":""}${a} · ${nb}: ${b>0?"+":""}${b}<br><span class="hint">If the result feels wrong, find the line you wanted to count double.</span>`;
+}
+["la","lb","na","nb"].forEach(i=>$("#"+i).addEventListener("input",decide));
+
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b){tab=b.dataset.t;show();store();$("#scroll").scrollTop=0}});
+show();renderPlan();
+</script>
+</body>
+</html>
