@@ -1,0 +1,13 @@
+{
+  "id": "/kyron/",
+  "name": "KYRON",
+  "short_name": "KYRON",
+  "description": "Welcome to KYRON.",
+  "start_url": "/kyron/",
+  "scope": "/kyron/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "orientation": "portrait",
+  "icons": []
+}
